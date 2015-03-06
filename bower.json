@@ -1,0 +1,7 @@
+{
+  "name": "x-audio#gh-pages",
+  "private": true,
+  "dependencies": {
+    "x-audio": "tc-team/x-audio#master"
+  }
+}
