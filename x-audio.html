@@ -9,6 +9,7 @@
 -->
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../core-icons/av-icons.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../paper-slider/paper-slider.html">
 
 <!--
@@ -23,26 +24,34 @@ Material design audio element
 @status alpha
 @homepage https://github.com/tc-team/components/x-audio
 -->
-<polymer-element name="x-audio" attributes="src name disabled">
+<polymer-element name="x-audio" attributes="src name disabled showName showVolumeControls">
 
   <template>
 
     <link rel="stylesheet" href="x-audio.css">
 
-    <div id="container" horizontal layout>
-      <core-icon id="playButton" icon="av:play-arrow" on-click="{{play}}"></core-icon>
-      <div class="audio" vertical layout>
-        <div>
-          <span id="name">{{name}}</span>
-          <span id="remainder">{{remainder}}</span>
-        </div>
-        <paper-slider id="audio_slider" min="0" max="{{duration}}" value="{{value}}" on-change="{{changeCurrentTime}}"></paper-slider>
+    <div id="container" horizontal layout center>
+
+      <div self-center>
+        <paper-icon-button id="playButton" on-click="{{togglePlay}}" icon="av:play-circle-outline" role="button" tabindex="0" aria-label="av:play-circle-outline"></paper-icon-button>
       </div>
-      <div class="volume" vertical layout>
-        <span>
-          <core-icon id="mute" icon="av:volume-up" on-mouseout="{{mouseOut}}" on-mouseover="{{mouseOver}}" on-click="{{mute}}"></core-icon>     
-        </span>
-        <paper-slider id="volume_slider" min="0" max="10" value="{{volume}}" on-change="{{changeVolume}}"></paper-slider>
+
+      <div class="audio" flex  self-center >
+            <div id="info" horizontal layout justified>
+              <span id="name">{{ (showName ? name : '')}}</span>
+              <span id="remainder">{{remainder}}</span>
+            </div>
+            <div>
+              <paper-slider flex  id="audio_slider" min="0" max="{{duration}}" value="{{value}}" on-change="{{changeCurrentTime}}"></paper-slider>
+            </div>
+      </div>
+      <div self-center class="volume" hodden?="{{!showVolumeControls}}">
+        <div horizontal layout center >
+          <paper-icon-button id="mute" icon="av:volume-up" on-mouseout="{{mouseOut}}" on-mouseover="{{mouseOver}}" on-click="{{mute}}"></paper-icon-button>
+          <div flex>
+            <paper-slider id="volume_slider" min="0" max="10" value="{{volume}}" on-change="{{changeVolume}}"></paper-slider>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -77,49 +86,73 @@ Material design audio element
    */
 
   disabled: false,
+  showName: false,
+  showVolumeControls: false,
+
+  isPlaying: false,
   ready: function () {
-    if (!!this.src) this.init(this.src);
+
+    if (!this.src) this.init(this.src);
+
   },
   init: function (src) {
     var self = this;
     self.length = 0;
     self.volume = 8;
-    self.remainder = '00:00:00';
+    self.remainder = '';
+
     self.audio = new Audio(src);
     self.audio.volume = self.volume / 10;
     self.audio.addEventListener('ended', function () {
       self.value = self.length;
-      self.$.playButton.icon = 'av:play-arrow';
+      self.$.playButton.icon = 'av:play-circle-outline';
     });
+
+    self.audio.addEventListener("loadedmetadata", function() {
+      self.remainder = self.toHHMMSS(this.duration);
+    });
+
     self.audio.addEventListener('timeupdate', function (){
       self.value = parseInt(this.currentTime, 10);
       self.duration = this.duration;
-      self.remainder = self.toHHMMSS(this.duration - this.currentTime);
+      self.remainder = '-'+self.toHHMMSS(this.duration - this.currentTime);
     });
+
   },
   srcChanged: function (oldValue, newValue) {
-    this.init(newValue);
+    if(newValue) {
+      this.init(newValue);
+    }
   },
-  play: function () {
+  togglePlay: function () {
     if (!this.src && !this.disabled) return;
-    if (this.$.playButton.icon === 'av:play-arrow') {
+    if (!this.isPlaying) {
       this.audio.play();
-      this.$.playButton.icon = 'av:pause';
 
+      this.$.playButton.icon = 'av:pause-circle-outline';
+      this.isPlaying = true;
     } else {
-      this.$.playButton.icon = 'av:play-arrow';
+      this.$.playButton.icon = 'av:play-circle-outline';
       this.audio.pause();
+      this.isPlaying = false;
     }
   },
   changeCurrentTime: function (event) {
     if (!this.src && !this.disabled) return;
-    this.audio.currentTime = event.target.immediateValue_;
+    this.audio.currentTime = event.target.immediateValue;
   },
   changeVolume: function (event) {
     if (!this.src && !this.disabled) return;
-    this.volume = event.target.immediateValue_;
-    var volume = (event.target.immediateValue_) / 10;
+    this.volume = event.target.immediateValue;
+    var volume = this.volume / 10;
     this.audio.volume = volume;
+
+    if (this.audio.volume === 0) {
+      this.$.mute.icon = "av:volume-off";
+    } else {
+      this.$.mute.icon = "av:volume-up";
+    }
+
   },
   mouseOver: function () {
     if (!this.src && !this.disabled) return;
@@ -154,10 +187,10 @@ Material design audio element
       var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
       var seconds = sec_num - (hours * 3600) - (minutes * 60);
 
-      if (hours   < 10) {hours   = "0"+hours;}
-      if (minutes < 10) {minutes = "0"+minutes;}
+      //if (hours   < 10) {hours   = "0"+hours;}
+      //if (minutes < 10) {minutes = "0"+minutes;}
       if (seconds < 10) {seconds = "0"+seconds;}
-      var time    = hours+':'+minutes+':'+seconds;
+      var time    = (hours > 0 ? hours+':' :'')+ minutes + ':'+seconds;
       return time;
   },
   disabledChanged: function (oldValue, newValue) {

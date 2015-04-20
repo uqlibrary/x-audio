@@ -9,117 +9,93 @@
  */
 
 :host {
-	width: 100%;
-	min-width: 200px;
-	height: 50px;
 	-webkit-box-sizing: border-box;
 	   -moz-box-sizing: border-box;
             box-sizing: border-box;
-	padding: 5px;	
 	position: relative;
-	color: #FF4081;	
+	color: #757575;
+    font-family: 'Roboto', sans-serif;
 }
 .disabled {
 	color: #ccc;
 }
 
 core-icon {
-	color: #FF4081 !important;
+	color: #757575 !important;
 }
 
 .audio {
-	width: 80%;
-	margin-right: 30px;
-	height: 40px;
+    position: relative;
 }
 
 .audio span {
-	height: 35px;
-	line-height: 35px;
-	font-family: 'Roboto', sans-serif;
+    font-size: 14px;
 }
 
 .volume {
-	width: 15%;
-	height: 40px;
-	line-height: 35px;
+    /*min-width: 100px;*/
+    min-width: 120px;
+    width: 15%;
+
 }
 
-#playButton {
-	color: #FF4081;
-	width: 40px;
-	height: 40px;
-	margin-right: 10px;
+paper-icon-button {
+    transition: 150ms ease-in-out;
+    border-radius: 50%;
+    color: #757575;
+}
+paper-icon-button::shadow core-icon {
+    color: #757575;
 }
 
-#playButton:hover {
-	cursor: pointer;
-	-ms-transform: scale(1.2, 1.2); /* IE 9 */
-    -webkit-transform: scale(1.2, 1.2); /* Chrome, Safari, Opera */
-    transform: scale(1.2, 1.2);
-    transition: transform 0.2s;
+paper-icon-button#playButton::shadow core-icon {
+    width: 44px;
+    height: 44px;
 }
+
+paper-icon-button#mute::shadow core-icon {
+    width: 24px;
+    height: 24px;
+}
+
+#info {
+   padding-left: 12px;
+   position: absolute;
+   top: -8px;
+   left: 0px;
+   width: 100%;
+}
+#name {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding-right: 24px;
+}
+#remainder {
+    padding-right: 24px;
+}
+
+paper-icon-button:hover {
+    transition: 150ms ease-in-out;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
 
 #audio_slider {
-	width: 100%;
-		-webkit-box-sizing: border-box;
-	   -moz-box-sizing: border-box;
-	        box-sizing: border-box;
-	height:5px;
-	display: block;
-	background-color: #FFF;
+    background-color: #FFF;
 }
 
 #audio_slider:hover, #volume_slider:hover, #mute:hover {
 	cursor: pointer;
 }
 
-#remainder {
-	float: right;
-}
 
-#volume_slider {
-	width: 100%;
-	display: block;
-}
-
-paper-slider::shadow #sliderContainer {
-	margin: 0;
-	padding: 0;
-	width: 100%;
-	height: 5px;
-}
-
-paper-slider::shadow .bar-container {
-	left: 0;
-	height: 5px;
-	width: 100%;
-}
-
-paper-slider::shadow  #sliderBar {
-	left: 0;
-	width: 100%;
-}
-
-paper-slider::shadow .bar-container #sliderBar{
-	top: 0;
-	height: 5px;
-	margin: 0;
-	padding: 0;
-}
-
+paper-slider {
+    width: 100%; }
 paper-slider::shadow #sliderBar::shadow #activeProgress {
-  background-color: #FF4081;
-}
-
-paper-slider::shadow #sliderKnob {
-	display: none;
-}
-
-paper-slider::shadow #sliderBar::shadow #progressContainer {
-  background-color: #D1C4E9;
-}
-
-core-icon#playButton {
-	color: #fff;
-}
+    background-color: #007e9e; }
+paper-slider::shadow #sliderKnobInner {
+    background-color: #007e9e; }
+paper-slider::shadow #sliderKnobInner::before {
+    background-color: #007e9e; }

@@ -22,6 +22,7 @@
   "dependencies": {
     "polymer": "Polymer/polymer#^0.5.4",
     "paper-slider": "Polymer/paper-slider#~0.5.5",
+    "paper-icon-button": "Polymer/paper-icon-button#~0.5.5",
     "core-icon": "Polymer/core-icon#~0.5.5"
   },
   "devDependencies": {
