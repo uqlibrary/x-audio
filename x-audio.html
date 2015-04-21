@@ -91,18 +91,13 @@ Material design audio element
   isPlaying: false,
   volume: 8,
   ready: function () {
-    if (!this.src)
+    if (!this.src && this.src != '')
       this.init(this.src);
   },
   init: function (src) {
     var self = this;
     self.length = 0;
     self.remainder = '';
-    if(self.audio) {
-      self.audio.pause();
-      this.isPlaying = false;
-      self.audio = null;
-    }
 
     this.$.playButton.icon = 'av:play-circle-outline';
     self.audio = new Audio(src);
@@ -131,6 +126,9 @@ Material design audio element
 
   },
   srcChanged: function (oldValue, newValue) {
+    if(this.audio) {
+      this.pause();
+    }
     if(newValue) {
       this.init(newValue);
     }
