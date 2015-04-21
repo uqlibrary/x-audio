@@ -15,6 +15,7 @@
 	position: relative;
 	color: #757575;
     font-family: 'Roboto', sans-serif;
+    width: 100%;
 }
 .disabled {
 	color: #ccc;
@@ -79,11 +80,6 @@ paper-icon-button:hover {
     transition: 150ms ease-in-out;
     border-radius: 50%;
     background-color: rgba(0, 0, 0, 0.1);
-}
-
-
-#audio_slider {
-    background-color: #FFF;
 }
 
 #audio_slider:hover, #volume_slider:hover, #mute:hover {
