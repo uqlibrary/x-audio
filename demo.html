@@ -19,7 +19,30 @@
 </head>
 <body unresolved>
   <div style="width:400px">
-    <x-audio src="example.mp3" name="sss" showVolumeControls></x-audio>
+    <x-audio src="track1.mp3" showVolumeControls></x-audio>
   </div>
+  <a href="#" onclick="return setRecord('track1.mp3')">Play Record 1</a>&nbsp;&nbsp;
+  <a href="#" onclick="return setRecord('track2.mp3')">Play Record 2</a>
 </body>
+<script>
+  var myEl = document.querySelector('x-audio');
+  var autoplay = false;
+  myEl.addEventListener('x-audio-initialized', function() {
+    if(autoplay)
+      myEl.play()
+  });
+
+  function setRecord(url) {
+    if(myEl.src == url) {
+      myEl.play();
+    } else{
+      autoplay = true;
+      myEl.src = url;
+    }
+
+  }
+
+
+
+</script>
 </html>

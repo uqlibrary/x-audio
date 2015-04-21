@@ -42,14 +42,14 @@ Material design audio element
               <span id="remainder">{{remainder}}</span>
             </div>
             <div>
-              <paper-slider flex  id="audio_slider" min="0" max="{{duration}}" value="{{value}}" on-change="{{changeCurrentTime}}"></paper-slider>
+              <paper-slider flex  id="audio_slider" min="0" max="{{duration}}" value="{{currentTimeValue}}" on-change="{{changeCurrentTime}}"></paper-slider>
             </div>
       </div>
-      <div self-center class="volume" hodden?="{{!showVolumeControls}}">
+      <div self-center class="volume" hidden?="{{!showVolumeControls}}">
         <div horizontal layout center >
           <paper-icon-button id="mute" icon="av:volume-up" on-mouseout="{{mouseOut}}" on-mouseover="{{mouseOver}}" on-click="{{mute}}"></paper-icon-button>
           <div flex>
-            <paper-slider id="volume_slider" min="0" max="10" value="{{volume}}" on-change="{{changeVolume}}"></paper-slider>
+            <paper-slider id="volume_slider" min="0" max="10" value="{{volume}}" immediateValue="{{immediateVolume}}"></paper-slider>
           </div>
         </div>
       </div>
@@ -88,23 +88,27 @@ Material design audio element
   disabled: false,
   showName: false,
   showVolumeControls: false,
-
   isPlaying: false,
+  volume: 8,
   ready: function () {
-
-    if (!this.src) this.init(this.src);
-
+    if (!this.src)
+      this.init(this.src);
   },
   init: function (src) {
     var self = this;
     self.length = 0;
-    self.volume = 8;
     self.remainder = '';
+    if(self.audio) {
+      self.audio.pause();
+      this.isPlaying = false;
+      self.audio = null;
+    }
 
+    this.$.playButton.icon = 'av:play-circle-outline';
     self.audio = new Audio(src);
     self.audio.volume = self.volume / 10;
     self.audio.addEventListener('ended', function () {
-      self.value = self.length;
+      self.currentTimeValue = self.length;
       self.$.playButton.icon = 'av:play-circle-outline';
     });
 
@@ -113,10 +117,17 @@ Material design audio element
     });
 
     self.audio.addEventListener('timeupdate', function (){
-      self.value = parseInt(this.currentTime, 10);
+      self.currentTimeValue = parseInt(this.currentTime, 10);
       self.duration = this.duration;
       self.remainder = '-'+self.toHHMMSS(this.duration - this.currentTime);
     });
+
+    self.audio.addEventListener('ended', function (){
+      self.remainder = self.toHHMMSS(this.duration);
+      self.fire('x-audio-ended');
+    });
+
+    this.fire('x-audio-initialized');
 
   },
   srcChanged: function (oldValue, newValue) {
@@ -127,25 +138,33 @@ Material design audio element
   togglePlay: function () {
     if (!this.src && !this.disabled) return;
     if (!this.isPlaying) {
-      this.audio.play();
-
-      this.$.playButton.icon = 'av:pause-circle-outline';
-      this.isPlaying = true;
+      this.play()
     } else {
-      this.$.playButton.icon = 'av:play-circle-outline';
-      this.audio.pause();
-      this.isPlaying = false;
+      this.pause()
     }
   },
+
+  play: function() {
+    this.audio.play();
+    this.$.playButton.icon = 'av:pause-circle-outline';
+    this.isPlaying = true;
+    this.fire('x-audio-play');
+  },
+
+  pause: function() {
+    this.$.playButton.icon = 'av:play-circle-outline';
+    this.audio.pause();
+    this.isPlaying = false;
+    this.fire('x-audio-pause');
+  },
+
   changeCurrentTime: function (event) {
     if (!this.src && !this.disabled) return;
     this.audio.currentTime = event.target.immediateValue;
   },
-  changeVolume: function (event) {
+  immediateVolumeChanged: function (oldValue, newValue) {
     if (!this.src && !this.disabled) return;
-    this.volume = event.target.immediateValue;
-    var volume = this.volume / 10;
-    this.audio.volume = volume;
+    this.audio.volume = newValue / 10;
 
     if (this.audio.volume === 0) {
       this.$.mute.icon = "av:volume-off";
