@@ -24,7 +24,7 @@ Material design audio element
 @status alpha
 @homepage https://github.com/tc-team/components/x-audio
 -->
-<polymer-element name="x-audio" attributes="src name disabled showName showVolumeControls">
+<polymer-element name="x-audio" attributes="src name disabled showName showVolumeControls showSeekControl">
 
   <template>
 
@@ -40,9 +40,9 @@ Material design audio element
       <div class="audio" flex  self-center >
             <div id="info" horizontal layout justified>
               <span id="name">{{ (showName ? name : '')}}</span>
-              <span id="remainder">{{remainder}}</span>
+              <span id="remainder" hidden?="{{!showSeekControl}}">{{remainder}}</span>
             </div>
-            <div>
+            <div hidden?="{{!showSeekControl}}">
               <paper-slider flex  id="audio_slider" min="0" max="{{duration}}" value="{{currentTimeValue}}" on-change="{{changeCurrentTime}}"></paper-slider>
             </div>
       </div>
@@ -90,6 +90,7 @@ Material design audio element
   disabled: false,
   showName: false,
   showVolumeControls: false,
+  showSeekControl: false,
   isPlaying: false,
   volume: 8,
   ready: function () {
