@@ -24,7 +24,7 @@ Material design audio element
 @status alpha
 @homepage https://github.com/tc-team/components/x-audio
 -->
-<polymer-element name="x-audio" attributes="src name disabled showName showVolumeControls showSeekControl">
+<polymer-element name="x-audio" attributes="src name disabled preload showName showVolumeControls showSeekControl">
 
   <template>
 
@@ -95,6 +95,7 @@ Material design audio element
   audio: null,
   volume: 8,
   audioObjectSet: false,
+  preload: 'none',
   ready: function () {
     if (!this.src && this.src != '')
       this.init(this.src);
@@ -105,7 +106,9 @@ Material design audio element
     self.remainder = '';
 
     this.$.playButton.icon = 'av:play-circle-outline';
-    this.audio = new Audio(src);
+    this.audio = new Audio();
+    this.audio.preload = this.preload;
+    this.audio.src = src;
     this.initAudio();
   },
 
@@ -159,6 +162,7 @@ Material design audio element
     this.initAudio();
     this.src = audio.src;
     this.audioObjectSet = false;
+
   },
 
   togglePlay: function () {
