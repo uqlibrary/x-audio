@@ -94,6 +94,7 @@ Material design audio element
   isPlaying: false,
   audio: null,
   volume: 8,
+  audioObjectSet: false,
   ready: function () {
     if (!this.src && this.src != '')
       this.init(this.src);
@@ -144,9 +145,20 @@ Material design audio element
     if(this.audio) {
       this.pause();
     }
-    if(newValue) {
+    if(newValue && !this.audioObjectSet) {
       this.init(newValue);
     }
+  },
+
+  setAudioObject: function(audio) {
+    this.audioObjectSet = true;
+    if(this.audio) {
+      this.audio.pause();
+    }
+    this.audio = audio;
+    this.initAudio();
+    this.src = audio.src;
+    this.audioObjectSet = false;
   },
 
   togglePlay: function () {

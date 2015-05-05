@@ -40,7 +40,8 @@
       autoplay = false;
     }
     if(play) {
-      myEl.src = url;
+      var audio = new Audio(url);
+      myEl.setAudioObject(audio);
       autoplay = true;
     }
   }
