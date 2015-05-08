@@ -144,14 +144,19 @@ Material design audio element
 
   },
 
-  srcChanged: function (oldValue, newValue) {
+  setSrc: function(val) {
+    this.src = val;
+    this.init(val);
+  },
+
+  /*srcChanged: function (oldValue, newValue) {
     if(this.audio) {
       this.pause();
     }
     if(newValue) {
       this.init(newValue);
     }
-  },
+  },*/
 
   setAudioObject: function(audio) {
     this.audioObjectSet = true;
