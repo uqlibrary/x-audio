@@ -119,8 +119,8 @@ Material design audio element
       var that = this;
       this.audio.volume = this.volume / 10;
       this.audio.addEventListener("loadedmetadata", function() {
-        if(this.duration) {
-          that.remainder = that.toHHMMSS(this.duration);
+        if(that.duration) {
+          that.remainder = that.toHHMMSS(that.duration);
         }
         that.currentTimeValue = 0;
         that.fire('x-audio-loadedmetadata');
@@ -129,8 +129,8 @@ Material design audio element
       this.audio.addEventListener('timeupdate', function (){
         that.currentTimeValue = parseInt(this.currentTime, 10);
         that.duration = this.duration;
-        if(this.currentTime && this.duration) {
-          that.remainder =  that.toHHMMSS(this.currentTime) + '/' + that.toHHMMSS(this.duration);
+        if(that.currentTime && that.duration) {
+          that.remainder =  that.toHHMMSS(that.currentTime) + '/' + that.toHHMMSS(that.duration);
         }
         that.fire('x-audio-timeupdate');
       });
