@@ -120,6 +120,8 @@ Material design audio element
       var that = this;
       if(!this.isMuted) {
         this.audio.volume = this.volume / 10;
+      } else {
+        this.audio.volume = 0;
       }
       this.audio.addEventListener("loadedmetadata", function() {
         if(this.duration) {
